@@ -1,0 +1,127 @@
+﻿@{
+    ViewBag.Title = "Search Results";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary">Available Flights</h2>
+    <p class="text-muted">
+        Showing flights from <b>@ViewBag.FromCity</b> to <b>@ViewBag.ToCity</b>
+        on <b>@ViewBag.Date</b>
+    </p>
+
+    @if (ViewBag.FromCity == null || ViewBag.ToCity == null)
+    {
+        <div class="alert alert-warning text-center mt-3">
+            No flights found. Please search again.
+        </div>
+    }
+    else
+    {
+        <table class="table table-bordered table-hover mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th>FlightId</th>
+                    <th>Flight No</th>
+                    <th>Airline</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Departure</th>
+                    <th>Arrival</th>
+                    <th>Price (₹)</th>
+                    <th>Seats</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Demo static rows -->
+                <tr>
+                    <td>1</td>
+                    <td>A123</td>
+                    <td>IndiGo</td>
+                    <td>@ViewBag.FromCity</td>
+                    <td>@ViewBag.ToCity</td>
+                    <td>08:30 AM</td>
+                    <td>10:45 AM</td>
+                    <td>4,500</td>
+                    <td>
+                        <select id="seats1" class="form-select form-select-sm">
+                            @for (int i = 1; i <= 6; i++)
+                            {
+                                <option value="@i">@i</option>
+                            }
+                        </select>
+                    </td>
+                    <td>
+                        <a href="#" onclick="bookFlight('@ViewBag.FromCity','@ViewBag.ToCity','@ViewBag.Date','IndiGo',4500,'seats1')"
+                           class="btn btn-sm btn-success">
+                            Book
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>A223</td>
+                    <td>Air India</td>
+                    <td>@ViewBag.FromCity</td>
+                    <td>@ViewBag.ToCity</td>
+                    <td>01:15 PM</td>
+                    <td>03:30 PM</td>
+                    <td>5,200</td>
+                    <td>
+                        <select id="seats2" class="form-select form-select-sm">
+                            @for (int i = 1; i <= 6; i++)
+                            {
+                                <option value="@i">@i</option>
+                            }
+                        </select>
+                    </td>
+                    <td>
+                        <a href="#" onclick="bookFlight('@ViewBag.FromCity','@ViewBag.ToCity','@ViewBag.Date','Air India',5200,'seats2')"
+                           class="btn btn-sm btn-success">
+                            Book
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>A323</td>
+                    <td>SpiceJet</td>
+                    <td>@ViewBag.FromCity</td>
+                    <td>@ViewBag.ToCity</td>
+                    <td>06:45 PM</td>
+                    <td>09:00 PM</td>
+                    <td>4,800</td>
+                    <td>
+                        <select id="seats3" class="form-select form-select-sm">
+                            @for (int i = 1; i <= 6; i++)
+                            {
+                                <option value="@i">@i</option>
+                            }
+                        </select>
+                    </td>
+                    <td>
+                       <a href="#"
+   onclick="bookFlight(1,'@ViewBag.FromCity','@ViewBag.ToCity','@ViewBag.Date','IndiGo',4500,'seats1')"
+   class="btn btn-sm btn-success">
+    Book
+</a>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    }
+</div>
+
+<script>
+    function bookFlight(fromCity, toCity, date, airline, price, seatDropdownId) {
+        var seats = document.getElementById(seatDropdownId).value;
+        window.location.href = '/Flights/Book?FromCity=' + fromCity +
+            '&ToCity=' + toCity +
+            '&Date=' + date +
+            '&Airline=' + airline +
+            '&Price=' + price +
+            '&Seats=' + seats;
+    }
+</script>

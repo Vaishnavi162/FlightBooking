@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "Flight Booking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary">Passenger Details</h2>
+    <p>
+        <b>Price:</b> ₹@ViewBag.Price × @ViewBag.Seats (Seats) =
+        <b>₹@ViewBag.TotalPrice</b>
+    </p>
+
+
+
+    @using (Html.BeginForm("BookConfirm", "Flights", FormMethod.Post))
+    {
+        <!-- Hidden fields to send booking details -->
+        @Html.Hidden("FromCity", (string)ViewBag.FromCity)
+        @Html.Hidden("ToCity", (string)ViewBag.ToCity)
+        @Html.Hidden("Date", (string)ViewBag.Date)
+        @Html.Hidden("Airline", (string)ViewBag.Airline)
+        @Html.Hidden("Price", (int)ViewBag.Price)
+        @Html.Hidden("Seats", (int)ViewBag.Seats)
+        <input type="hidden" name="TotalPrice" value="@ViewBag.TotalPrice" />
+
+
+        <div class="mb-3">
+            <label class="form-label">Passenger Name</label>
+            <input type="text" name="PassengerName" class="form-control" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="Email" class="form-control" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Mobile</label>
+            <input type="text" name="Mobile" class="form-control" required />
+        </div>
+
+        <button type="submit" class="btn btn-success">Confirm Booking</button>
+    }
+</div>

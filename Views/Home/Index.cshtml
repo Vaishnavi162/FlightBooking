@@ -1,0 +1,130 @@
+﻿@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- ✅ Login Success Alert -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div id="loginAlert" class="alert alert-success text-center mx-auto mt-3"
+         style="max-width: 400px;" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<!-- ✅ Logout Alert -->
+@if (Session["LogoutMessage"] != null)
+{
+    <div id="logoutAlert" class="alert alert-danger text-center mx-auto mt-3"
+         style="max-width: 400px;" role="alert">
+        @Session["LogoutMessage"]
+    </div>
+
+    <!-- ✅ Clear message after showing -->
+    { Session["LogoutMessage"] = null; }
+}
+
+
+
+<style>
+    .fade-out {
+        opacity: 0;
+        transition: opacity 1s ease-out;
+    }
+</style>
+
+<script>
+    function fadeOut(id) {
+        var alertBox = document.getElementById(id);
+        if (alertBox) {
+            alertBox.classList.add("fade-out");
+            setTimeout(function () {
+                alertBox.style.display = "none";
+            }, 1000);
+        }
+    }
+
+    // ✅ Auto hide after 3 sec
+    setTimeout(function () { fadeOut("loginAlert"); }, 3000);
+    setTimeout(function () { fadeOut("logoutAlert"); }, 3000);
+</script>
+
+
+
+<!-- Hero Section -->
+@*<div class="bg-light p-5 rounded-3 shadow-sm text-center">
+        <h1 class="display-5 fw-bold text-primary">Welcome to FlightBooking ✈️</h1>
+        <p class="lead text-muted">Search, book, and manage your flights easily</p>
+    </div>*@
+<div class="bg-light p-5 rounded-3 shadow-sm text-center">
+    @if (Session["UserName"] != null)
+    {
+        <h1 class="display-5 fw-bold text-primary">Welcome to FlightBooking ✈️</h1>
+        <p class="lead text-muted">Welcome back! Ready to book your next flight?</p>
+    }
+    else
+    {
+        <h1 class="display-5 fw-bold text-primary">Welcome to FlightBooking ✈️</h1>
+        <p class="lead text-muted">Search, book, and manage your flights easily</p>
+    }
+</div>
+
+<!-- Flight Search Form -->
+<div class="card shadow mt-4">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Find Your Flight</h4>
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("Search", "Flights", FormMethod.Get))
+        {
+            <div class="row g-3">
+                <div class="col-md-4">
+                    @Html.Label("From City", htmlAttributes: new { @class = "form-label" })
+                    <input type="text" name="FromCity" class="form-control" placeholder="Enter origin city" required />
+                </div>
+                <div class="col-md-4">
+                    @Html.Label("To City", htmlAttributes: new { @class = "form-label" })
+                    <input type="text" name="ToCity" class="form-control" placeholder="Enter destination city" required />
+                </div>
+                <div class="col-md-3">
+                    @Html.Label("Departure Date", htmlAttributes: new { @class = "form-label" })
+                    <input type="date" name="Date" class="form-control" required />
+                </div>
+                <div class="col-md-1 d-flex align-items-end">
+                    <button type="submit" class="btn btn-success w-100">Search</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Optional: Popular Routes -->
+<div class="mt-5">
+    <h3 class="text-center mb-4">🌍 Popular Routes</h3>
+    <div class="row text-center">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 mb-3">
+                <div class="card-body">
+                    <h5>Mumbai → Delhi</h5>
+                    <p class="text-muted">Starting from ₹4500</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 mb-3">
+                <div class="card-body">
+                    <h5>Bangalore → Chennai</h5>
+                    <p class="text-muted">Starting from ₹2200</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 mb-3">
+                <div class="card-body">
+                    <h5>Kolkata → Hyderabad</h5>
+                    <p class="text-muted">Starting from ₹3800</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
