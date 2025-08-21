@@ -1,6 +1,7 @@
 ﻿@model FlightBooking.Models.UserRegister
+
 @{
-    ViewBag.Title = "Register";
+    ViewBag.Title = "User Registration";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,34 +10,58 @@
         <div class="col-md-6">
             <div class="card shadow-lg border-0 rounded-3">
                 <div class="card-header bg-primary text-white text-center">
-                    <h3>Create Account</h3>
+                    <h3>User Registration</h3>
                 </div>
                 <div class="card-body">
-                    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+                    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
                         @Html.AntiForgeryToken()
 
-                        <div class="mb-3">
-                            @Html.LabelFor(m => m.UserName, new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "Enter your full name" })
-                            @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(m => m.UserName)
+                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "Enter username" })
                         </div>
 
-                        <div class="mb-3">
-                            @Html.LabelFor(m => m.Email, new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Enter your email" })
-                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(m => m.Email)
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Enter email" })
                         </div>
 
-                        <div class="mb-3">
-                            @Html.LabelFor(m => m.Password, new { @class = "form-label" })
-                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Enter strong password" })
-                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(m => m.Password)
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Enter password" })
                         </div>
 
-                       
+                        <!-- New Fields -->
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(m => m.Gender)
+                            @Html.DropDownListFor(m => m.Gender,
+                                new SelectList(new[] { "Male", "Female", "Other" }),
+                                "Select Gender",
+                                new { @class = "form-control" })
+                        </div>
 
-                        <button type="submit" class="btn btn-primary w-100">Register</button>
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(m => m.Mobile)
+                            @Html.TextBoxFor(m => m.Mobile, new { @class = "form-control", placeholder = "Enter mobile number" })
+                        </div>
+
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(m => m.State)
+                            @Html.TextBoxFor(m => m.State, new { @class = "form-control", placeholder = "Enter state" })
+                        </div>
+
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(m => m.City)
+                            @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "Enter city" })
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="ProfilePicture">Profile Picture</label>
+                            <input type="file" name="ProfilePicture" class="form-control" />
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100">Register</button>
                     }
                 </div>
                 <div class="card-footer text-center">

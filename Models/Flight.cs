@@ -11,20 +11,25 @@ namespace FlightBooking.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class Flight
     {
-        [Key]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Flight()
+        {
+            this.Bookings = new HashSet<Booking>();
+        }
+    
         public int FlightId { get; set; }
         public string FlightNo { get; set; }
         public string Airline { get; set; }
         public string Departure { get; set; }
         public string Destination { get; set; }
-        public DateTime Date { get; set; }
-        public decimal Price { get; set; }
-        public int Seats { get; set; }
-        public decimal TotalPrice { get; set; }
+        public Nullable<System.DateTime> Date { get; set; }
+        public Nullable<int> TotalSeats { get; set; }
+        public Nullable<decimal> Price { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Booking> Bookings { get; set; }
     }
-}
 }

@@ -2,6 +2,7 @@
 using Microsoft.Owin.Security.Provider;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -24,29 +25,28 @@ namespace FlightBooking.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(UserRegister ur)
+        public ActionResult Register(UserRegister model, HttpPostedFileBase ProfilePicture)
         {
             if (ModelState.IsValid)
             {
-                using (UserDataEntities db = new UserDataEntities())
+                if (ProfilePicture != null && ProfilePicture.ContentLength > 0)
                 {
-                    // check for duplicate email
-                    if (db.UserRegisters.Any(x => x.Email == ur.Email))
-                    {
-                        ViewBag.Message = "Email already registered";
-                        return View(ur);  // return View with model
-                    }
-
-                    db.UserRegisters.Add(ur);
-                    db.SaveChanges();
-                    Response.Write("<script>alert('Registration Successful')</script>");
-                    return RedirectToAction("Login"); // go to Login after success
+                    string fileName = Path.GetFileName(ProfilePicture.FileName);
+                    string path = Path.Combine(Server.MapPath("~/Uploads/Profiles"), fileName);
+                    ProfilePicture.SaveAs(path);
+                    model.ProfilePicture = "/Uploads/Profiles/" + fileName;
                 }
-            }
 
-            
-            return View(ur);
+                db.UserRegisters.Add(model);
+                db.SaveChanges();
+
+                TempData["SuccessMessage"] = "Registration successful!";
+                return RedirectToAction("Login");
+            }
+            return View(model);
         }
+
+
         [HttpGet]
         public ActionResult Login()
         {

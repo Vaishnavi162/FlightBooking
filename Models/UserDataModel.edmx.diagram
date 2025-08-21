@@ -7,6 +7,9 @@
       <Diagram DiagramId="0dc39d6363134996be1f7fec685fc7b1" Name="Diagram1">
         <EntityTypeShape EntityType="UserDataModel.UserRegister" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="UserDataModel.Flight" Width="1.5" PointX="3.375" PointY="0.75" />
+        <EntityTypeShape EntityType="UserDataModel.Booking" Width="1.5" PointX="5.625" PointY="1" />
+        <AssociationConnector Association="UserDataModel.FK_Bookings_Flight" />
+        <AssociationConnector Association="UserDataModel.FK_Bookings_User" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

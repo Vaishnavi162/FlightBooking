@@ -136,11 +136,52 @@ namespace FlightBooking.Controllers
         [HttpPost]
         public ActionResult BookConfirm(int FlightId, string PassengerName, string Email, string Mobile, int Seats, decimal Price)
         {
-            // यहां आप एक Booking table भी बना सकते हो जिसमें Passenger details save हों
-            // फिलहाल सिर्फ Success message दिखा रहे हैं
-            TempData["SuccessMessage"] = $"Booking confirmed for {PassengerName} ({Seats} seat(s))!";
+            // Total Price calculate
+            decimal totalPrice = Seats * Price;
+
+            // Passenger info ViewBag में डालना (sirf show karne ke liye)
+            ViewBag.PassengerName = PassengerName;
+            ViewBag.Email = Email;
+            ViewBag.Mobile = Mobile;
+            ViewBag.Seats = Seats;
+            ViewBag.Price = Price;
+            ViewBag.TotalPrice = totalPrice;
+            ViewBag.FlightId = FlightId;
+            ViewBag.Date = DateTime.Now.ToString("dd-MMM-yyyy");
+
+            return View("BookConfirmation");
+        }
+
+        [HttpPost]
+        public ActionResult ConfirmPayment(int FlightId, int Seats, string Date)
+        {
+            if (Session["UserId"] == null)
+            {
+                TempData["ErrorMessage"] = "Please login first.";
+                return RedirectToAction("Login", "Account");
+            }
+
+            int userId = Convert.ToInt32(Session["UserId"]);
+
+            using (var db = new UserDataEntities())
+            {
+                Booking booking = new Booking
+                {
+                    UserId = userId,
+                    FlightId = FlightId,
+                    Seats = Seats,
+                    Date = Convert.ToDateTime(Date)
+                };
+
+                db.Bookings.Add(booking);
+                db.SaveChanges();
+            }
+
+            TempData["SuccessMessage"] = "Your booking is confirmed!";
             return RedirectToAction("Index", "Home");
         }
+
+
 
 
     }

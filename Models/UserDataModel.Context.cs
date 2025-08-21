@@ -27,5 +27,6 @@ namespace FlightBooking.Models
     
         public virtual DbSet<UserRegister> UserRegisters { get; set; }
         public virtual DbSet<Flight> Flights { get; set; }
+        public virtual DbSet<Booking> Bookings { get; set; }
     }
 }

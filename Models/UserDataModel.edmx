@@ -5,18 +5,28 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="UserDataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Bookings">
+          <Key>
+            <PropertyRef Name="BookingId" />
+          </Key>
+          <Property Name="BookingId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="FlightId" Type="int" Nullable="false" />
+          <Property Name="Seats" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="Flights">
           <Key>
             <PropertyRef Name="FlightId" />
           </Key>
           <Property Name="FlightId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="FlightNo" Type="nvarchar" MaxLength="20" Nullable="false" />
-          <Property Name="Airline" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="Departure" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="Destination" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="Date" Type="date" Nullable="false" />
-          <Property Name="TotalSeats" Type="int" Nullable="false" />
-          <Property Name="Price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="FlightNo" Type="nvarchar" MaxLength="50" />
+          <Property Name="Airline" Type="nvarchar" MaxLength="100" />
+          <Property Name="Departure" Type="nvarchar" MaxLength="100" />
+          <Property Name="Destination" Type="nvarchar" MaxLength="100" />
+          <Property Name="Date" Type="date" />
+          <Property Name="Price" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="TotalSeats" Type="int" />
         </EntityType>
         <EntityType Name="UserRegister">
           <Key>
@@ -26,10 +36,48 @@
           <Property Name="UserName" Type="varchar" MaxLength="50" />
           <Property Name="Email" Type="varchar" MaxLength="50" />
           <Property Name="Password" Type="varchar" MaxLength="50" />
+          <Property Name="Gender" Type="varchar" MaxLength="50" />
+          <Property Name="Mobile" Type="varchar" MaxLength="50" />
+          <Property Name="State" Type="varchar" MaxLength="50" />
+          <Property Name="City" Type="varchar" MaxLength="50" />
+          <Property Name="ProfilePicture" Type="varchar" MaxLength="50" />
         </EntityType>
+        <Association Name="FK_Bookings_Flight">
+          <End Role="Flights" Type="Self.Flights" Multiplicity="1" />
+          <End Role="Bookings" Type="Self.Bookings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Flights">
+              <PropertyRef Name="FlightId" />
+            </Principal>
+            <Dependent Role="Bookings">
+              <PropertyRef Name="FlightId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bookings_User">
+          <End Role="UserRegister" Type="Self.UserRegister" Multiplicity="1" />
+          <End Role="Bookings" Type="Self.Bookings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserRegister">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Bookings">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="UserDataModelStoreContainer">
+          <EntitySet Name="Bookings" EntityType="Self.Bookings" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Flights" EntityType="Self.Flights" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRegister" EntityType="Self.UserRegister" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Bookings_Flight" Association="Self.FK_Bookings_Flight">
+            <End Role="Flights" EntitySet="Flights" />
+            <End Role="Bookings" EntitySet="Bookings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bookings_User" Association="Self.FK_Bookings_User">
+            <End Role="UserRegister" EntitySet="UserRegister" />
+            <End Role="Bookings" EntitySet="Bookings" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -43,24 +91,76 @@
           <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Gender" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Mobile" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ProfilePicture" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Bookings" Relationship="UserDataModel.FK_Bookings_User" FromRole="UserRegister" ToRole="Booking" />
         </EntityType>
         <EntityContainer Name="UserDataEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="UserRegisters" EntityType="Self.UserRegister" />
           <EntitySet Name="Flights" EntityType="UserDataModel.Flight" />
+          <EntitySet Name="Bookings" EntityType="UserDataModel.Booking" />
+          <AssociationSet Name="FK_Bookings_Flight" Association="UserDataModel.FK_Bookings_Flight">
+            <End Role="Flight" EntitySet="Flights" />
+            <End Role="Booking" EntitySet="Bookings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bookings_User" Association="UserDataModel.FK_Bookings_User">
+            <End Role="UserRegister" EntitySet="UserRegisters" />
+            <End Role="Booking" EntitySet="Bookings" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Flight">
           <Key>
             <PropertyRef Name="FlightId" />
           </Key>
           <Property Name="FlightId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FlightNo" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="Airline" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Departure" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Destination" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="TotalSeats" Type="Int32" Nullable="false" />
-          <Property Name="Price" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
+          <Property Name="FlightNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Airline" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Departure" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Destination" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Precision="0" />
+          <Property Name="TotalSeats" Type="Int32" />
+          <Property Name="Price" Type="Decimal" Precision="18" Scale="2" />
+          <NavigationProperty Name="Bookings" Relationship="UserDataModel.FK_Bookings_Flight" FromRole="Flight" ToRole="Booking" />
         </EntityType>
+        <EntityType Name="Booking">
+          <Key>
+            <PropertyRef Name="BookingId" />
+          </Key>
+          <Property Name="BookingId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="FlightId" Type="Int32" Nullable="false" />
+          <Property Name="Seats" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Flight" Relationship="UserDataModel.FK_Bookings_Flight" FromRole="Booking" ToRole="Flight" />
+          <NavigationProperty Name="UserRegister" Relationship="UserDataModel.FK_Bookings_User" FromRole="Booking" ToRole="UserRegister" />
+        </EntityType>
+        <Association Name="FK_Bookings_Flight">
+          <End Type="UserDataModel.Flight" Role="Flight" Multiplicity="1" />
+          <End Type="UserDataModel.Booking" Role="Booking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Flight">
+              <PropertyRef Name="FlightId" />
+            </Principal>
+            <Dependent Role="Booking">
+              <PropertyRef Name="FlightId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bookings_User">
+          <End Type="UserDataModel.UserRegister" Role="UserRegister" Multiplicity="1" />
+          <End Type="UserDataModel.Booking" Role="Booking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserRegister">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Booking">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -70,6 +170,11 @@
           <EntitySetMapping Name="UserRegisters">
             <EntityTypeMapping TypeName="UserDataModel.UserRegister">
               <MappingFragment StoreEntitySet="UserRegister">
+                <ScalarProperty Name="ProfilePicture" ColumnName="ProfilePicture" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
@@ -88,6 +193,17 @@
                 <ScalarProperty Name="Airline" ColumnName="Airline" />
                 <ScalarProperty Name="FlightNo" ColumnName="FlightNo" />
                 <ScalarProperty Name="FlightId" ColumnName="FlightId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Bookings">
+            <EntityTypeMapping TypeName="UserDataModel.Booking">
+              <MappingFragment StoreEntitySet="Bookings">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Seats" ColumnName="Seats" />
+                <ScalarProperty Name="FlightId" ColumnName="FlightId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="BookingId" ColumnName="BookingId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

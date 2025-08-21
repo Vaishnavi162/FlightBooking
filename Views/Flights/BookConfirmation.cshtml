@@ -3,9 +3,22 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container mt-5 text-center">
-    <div class="alert alert-success shadow">
-        <h2>✅ @ViewBag.Message</h2>
-    </div>
-    <a href="@Url.Action("Index","Home")" class="btn btn-primary mt-3">Back to Home</a>
+<div class="container mt-4">
+    <h2 class="text-success">Booking Confirmation</h2>
+
+    <p><b>Passenger:</b> @ViewBag.PassengerName</p>
+    <p><b>Email:</b> @ViewBag.Email</p>
+    <p><b>Mobile:</b> @ViewBag.Mobile</p>
+    <p><b>Seats:</b> @ViewBag.Seats</p>
+    <p><b>Price per Seat:</b> ₹@ViewBag.Price</p>
+    <p><b>Total Price:</b> <span class="text-danger">₹@ViewBag.TotalPrice</span></p>
+
+    @using (Html.BeginForm("ConfirmPayment", "Flights", FormMethod.Post))
+    {
+        <input type="hidden" name="FlightId" value="@ViewBag.FlightId" />
+        <input type="hidden" name="Seats" value="@ViewBag.Seats" />
+        <input type="hidden" name="Date" value="@ViewBag.Date" />
+
+        <button type="submit" class="btn btn-primary">Pay Now</button>
+    }
 </div>

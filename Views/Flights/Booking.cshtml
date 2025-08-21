@@ -14,7 +14,9 @@
 
     @using (Html.BeginForm("BookConfirm", "Flights", FormMethod.Post))
     {
+        @Html.AntiForgeryToken()
         <!-- Hidden fields to send booking details -->
+        <input type="hidden" name="FlightId" value="@Convert.ToString(ViewBag.FlightId ?? 0)" />
         @Html.Hidden("FromCity", (string)ViewBag.FromCity)
         @Html.Hidden("ToCity", (string)ViewBag.ToCity)
         @Html.Hidden("Date", (string)ViewBag.Date)
