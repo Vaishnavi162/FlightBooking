@@ -67,6 +67,9 @@ namespace FlightBooking.Controllers
 
                     // ✅ TempData me message save
                     TempData["SuccessMessage"] = "Login Successful! Welcome, " + user.UserName;
+                    // AccountController.cs - Login Success ke baad
+                    Session["UserId"] = user.UserId;   // 👈 UserId from UserRegister table
+                    Session["UserName"] = user.UserName;
 
                     // ✅ Redirect to Home/Index
                     return RedirectToAction("Index", "Home");

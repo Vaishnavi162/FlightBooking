@@ -263,6 +263,7 @@
     <Content Include="Views\Flights\SearchResults.cshtml" />
     <Content Include="Views\Flights\Booking.cshtml" />
     <Content Include="Views\Flights\BookConfirmation.cshtml" />
+    <Content Include="Views\Flights\PaymentSuccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
