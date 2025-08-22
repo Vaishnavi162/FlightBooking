@@ -22,7 +22,9 @@
 
             <div class="mb-3">
                 <label class="form-label"><b>Date</b></label>
-                @Html.TextBoxFor(m => m.Date, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                <input type="date" name="Date"
+                       value="@Model.Date.ToString("yyyy-MM-dd")"
+                       min="@DateTime.Today.ToString("yyyy-MM-dd")" />
             </div>
 
             <div class="mb-3">

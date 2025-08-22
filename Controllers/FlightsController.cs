@@ -44,11 +44,22 @@ namespace FlightBooking.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
+            // ✅ Flights list lo DB se
             var flights = db.Flights
                             .Where(f => f.Departure == FromCity &&
                                         f.Destination == ToCity &&
                                         f.Date == Date)
                             .ToList();
+
+            // ✅ Har flight ke liye available seats calculate karo
+            foreach (var flight in flights)
+            {
+                int bookedSeats = db.Bookings
+                                    .Where(b => b.FlightId == flight.FlightId)
+                                    .Sum(b => (int?)b.Seats) ?? 0;
+
+                flight.TotalSeats = flight.TotalSeats - bookedSeats; // overwrite available seats
+            }
 
             ViewBag.FromCity = FromCity;
             ViewBag.ToCity = ToCity;
@@ -56,6 +67,7 @@ namespace FlightBooking.Controllers
 
             return View("SearchResults", flights);
         }
+
         //    public ActionResult Search(string FromCity, string ToCity, DateTime Date)
         //    {
         //        if (Session["UserName"] == null)
@@ -85,7 +97,7 @@ namespace FlightBooking.Controllers
         // 📌 Book Page
         [HttpGet]
         public ActionResult Book(int FlightId, string FromCity, string ToCity, string Date,
-                         string Airline, decimal Price, int Seats)
+                         string Airline, decimal Price, int Seats, string FlightNo)
         {
             if (Session["UserName"] == null)
             {
@@ -96,7 +108,8 @@ namespace FlightBooking.Controllers
             // ✅ Flight object create
             var flight = new Flight
             {
-                FlightId = FlightId,       // अगर auto increment है तो ये remove करो
+                FlightId = FlightId,
+                FlightNo = FlightNo, // अगर auto increment है तो ये remove करो
                 Departure = FromCity,
                 Destination = ToCity,
                 Date = Convert.ToDateTime(Date),
@@ -111,6 +124,7 @@ namespace FlightBooking.Controllers
 
             // ✅ Pass data to Booking.cshtml
             ViewBag.FlightId = flight.FlightId;
+            ViewBag.FlightNo = flight.FlightNo;
             ViewBag.FromCity = FromCity;
             ViewBag.ToCity = ToCity;
             ViewBag.Date = Date;
@@ -136,15 +150,17 @@ namespace FlightBooking.Controllers
         [HttpPost]
         public ActionResult BookConfirm(int FlightId, string PassengerName, string Email, string Mobile, int Seats, decimal Price)
         {
-            if (Session["UserId"] == null)
-            {
-                TempData["ErrorMessage"] = "Please login to book flights.";
-                return RedirectToAction("Login", "Account");
-            }
-
             int userId = Convert.ToInt32(Session["UserId"]);
 
-            // ✅ Booking save in DB
+            // ✅ Flight record DB से nikaalo
+            var flight = db.Flights.FirstOrDefault(f => f.FlightId == FlightId);
+            if (flight == null)
+            {
+                TempData["ErrorMessage"] = "Flight not found!";
+                return RedirectToAction("Search", "Flights");
+            }
+
+            // ✅ Booking object save
             var booking = new Booking
             {
                 UserId = userId,
@@ -156,20 +172,18 @@ namespace FlightBooking.Controllers
             db.Bookings.Add(booking);
             db.SaveChanges();
 
-            // ✅ Total Price calculate
             decimal totalPrice = Price * Seats;
 
-            // ✅ ViewBag me data bhejna confirmation ke liye
+            // ✅ ViewBag me data
             ViewBag.PassengerName = PassengerName;
             ViewBag.Email = Email;
             ViewBag.Mobile = Mobile;
             ViewBag.FlightId = FlightId;
+            ViewBag.FlightNo = flight.FlightNo;   // 👈 ab flight number ayega
             ViewBag.Seats = Seats;
             ViewBag.TotalPrice = totalPrice;
-            ViewBag.BookingId = booking.BookingId;   // 👈 ab Payment link me BookingId jayega
 
-            // ✅ Direct Confirmation page show karna (RedirectToAction Nahi!)
-            return View("BookConfirmation");
+            return RedirectToAction("BookConfirmation", "Flights", new { bookingId = booking.BookingId });
         }
 
 
