@@ -136,21 +136,38 @@ namespace FlightBooking.Controllers
         [HttpPost]
         public ActionResult BookConfirm(int FlightId, string PassengerName, string Email, string Mobile, int Seats, decimal Price)
         {
-            // Total Price calculate
-            decimal totalPrice = Seats * Price;
+            // ✅ Current logged in user ka Id nikal lo
+            int userId = Convert.ToInt32(Session["UserId"]);
 
-            // Passenger info ViewBag में डालना (sirf show karne ke liye)
+            // ✅ Booking object banake save karo
+            var booking = new Booking
+            {
+                UserId = userId,
+                FlightId = FlightId,
+                Seats = Seats,
+              Date = DateTime.Now
+            };
+
+            db.Bookings.Add(booking);
+            db.SaveChanges();
+
+            // ✅ Total Price calculate karo
+            decimal totalPrice = Price * Seats;
+
+            // ✅ Data ViewBag me bhejo confirmation ke liye
             ViewBag.PassengerName = PassengerName;
             ViewBag.Email = Email;
             ViewBag.Mobile = Mobile;
-            ViewBag.Seats = Seats;
-            ViewBag.Price = Price;
-            ViewBag.TotalPrice = totalPrice;
             ViewBag.FlightId = FlightId;
-            ViewBag.Date = DateTime.Now.ToString("dd-MMM-yyyy");
+            ViewBag.Seats = Seats;
+            ViewBag.TotalPrice = totalPrice;
 
-            return View("BookConfirmation");
+            return RedirectToAction("Bookconfirmation", "Flights");
+
+
+
         }
+
 
         [HttpPost]
         public ActionResult ConfirmPayment(int FlightId, int Seats, string Date)
@@ -178,7 +195,7 @@ namespace FlightBooking.Controllers
             }
 
             TempData["SuccessMessage"] = "Your booking is confirmed!";
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Bookconfirmation", "Flights");
         }
 
 

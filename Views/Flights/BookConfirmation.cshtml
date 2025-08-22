@@ -3,22 +3,20 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container mt-4">
-    <h2 class="text-success">Booking Confirmation</h2>
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-success text-center">Booking Confirmed 🎉</h2>
+        <hr />
 
-    <p><b>Passenger:</b> @ViewBag.PassengerName</p>
-    <p><b>Email:</b> @ViewBag.Email</p>
-    <p><b>Mobile:</b> @ViewBag.Mobile</p>
-    <p><b>Seats:</b> @ViewBag.Seats</p>
-    <p><b>Price per Seat:</b> ₹@ViewBag.Price</p>
-    <p><b>Total Price:</b> <span class="text-danger">₹@ViewBag.TotalPrice</span></p>
+        <p><b>Passenger Name:</b> @ViewBag.PassengerName</p>
+        <p><b>Email:</b> @ViewBag.Email</p>
+        <p><b>Mobile:</b> @ViewBag.Mobile</p>
+        <p><b>Flight ID:</b> @ViewBag.FlightId</p>
+        <p><b>Seats:</b> @ViewBag.Seats</p>
+        <p><b>Total Price:</b> ₹@ViewBag.TotalPrice</p>
 
-    @using (Html.BeginForm("ConfirmPayment", "Flights", FormMethod.Post))
-    {
-        <input type="hidden" name="FlightId" value="@ViewBag.FlightId" />
-        <input type="hidden" name="Seats" value="@ViewBag.Seats" />
-        <input type="hidden" name="Date" value="@ViewBag.Date" />
-
-        <button type="submit" class="btn btn-primary">Pay Now</button>
-    }
+        <div class="text-center mt-3">
+            <a href="/Payments/Pay?BookingId=@ViewBag.BookingId" class="btn btn-primary">Proceed to Payment</a>
+        </div>
+    </div>
 </div>
