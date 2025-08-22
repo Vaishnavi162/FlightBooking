@@ -208,6 +208,58 @@ namespace FlightBooking.Controllers
             return View();
         }
 
+        public ActionResult Details(int id)
+        {
+            var flight = db.Flights.Find(id);
+            return View(flight);
+        }
+
+        // GET: Flights/EditBooking/5
+        [HttpGet]
+        public ActionResult EditBooking(int id)
+        {
+            var booking = db.Bookings.Include("Flight").FirstOrDefault(b => b.BookingId == id);
+            if (booking == null)
+            {
+                return HttpNotFound();
+            }
+            return View(booking);
+        }
+
+        // POST: Flights/EditBooking
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditBooking(Booking model)
+        {
+            var booking = db.Bookings.Find(model.BookingId);
+            if (booking == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Seats update
+            booking.Seats = model.Seats;
+            booking.Date = model.Date;
+
+            db.Entry(booking).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+
+            TempData["SuccessMessage"] = "Booking updated successfully!";
+            return RedirectToAction("Profile", "Account");
+        }
+
+
+        [HttpPost]
+        public ActionResult CancelBooking(int bookingId)
+        {
+            var booking = db.Bookings.Find(bookingId);
+            if (booking != null)
+            {
+                db.Bookings.Remove(booking);
+                db.SaveChanges();
+            }
+            return RedirectToAction("Profile", "Account");
+        }
 
 
     }

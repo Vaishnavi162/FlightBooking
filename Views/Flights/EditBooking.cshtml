@@ -1,0 +1,37 @@
+﻿@model FlightBooking.Models.Booking
+@{
+    ViewBag.Title = "Edit Booking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-primary">Edit Booking</h2>
+        <hr />
+
+        @using (Html.BeginForm("EditBooking", "Flights", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.BookingId)
+            @Html.HiddenFor(m => m.FlightId)
+
+            <div class="mb-3">
+                <label class="form-label"><b>Flight:</b></label>
+                <p>@Model.Flight.Airline (@Model.Flight.FlightNo) - @Model.Flight.Departure → @Model.Flight.Destination</p>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label"><b>Date</b></label>
+                @Html.TextBoxFor(m => m.Date, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label"><b>Seats</b></label>
+                @Html.TextBoxFor(m => m.Seats, new { @class = "form-control", type = "number", min = "1", max = "10" })
+            </div>
+
+            <button type="submit" class="btn btn-success">Update Booking</button>
+            <a href="@Url.Action("Profile", "Account")" class="btn btn-secondary">Cancel</a>
+        }
+    </div>
+</div>

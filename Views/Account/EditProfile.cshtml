@@ -1,0 +1,63 @@
+﻿@model FlightBooking.Models.UserRegister
+@{
+    ViewBag.Title = "Edit Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-primary">Edit Profile</h2>
+        <hr />
+
+        @using (Html.BeginForm("EditProfile", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label class="form-label">User Name</label>
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email" })
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Mobile</label>
+                @Html.TextBoxFor(m => m.Mobile, new { @class = "form-control" })
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Gender</label>
+                @Html.DropDownListFor(m => m.Gender,
+                    new SelectList(new[] { "Male", "Female", "Other" }),
+                    "Select Gender", new { @class = "form-select" })
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">State</label>
+                @Html.TextBoxFor(m => m.State, new { @class = "form-control" })
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">City</label>
+                @Html.TextBoxFor(m => m.City, new { @class = "form-control" })
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Profile Picture</label>
+                <input type="file" name="ProfilePicture" class="form-control" />
+                @if (!string.IsNullOrEmpty(Model.ProfilePicture))
+                {
+                    <div class="mt-2">
+                        <img src="@Model.ProfilePicture" width="120" height="120" class="rounded-circle border" />
+                    </div>
+                }
+            </div>
+
+            <button type="submit" class="btn btn-success">Update Profile</button>
+       
+            }
+    </div>
+</div>

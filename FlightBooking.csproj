@@ -184,6 +184,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UserDataModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\UserProfileViewModel.cs" />
     <Compile Include="Models\UserRegister.cs">
       <DependentUpon>UserDataModel.tt</DependentUpon>
     </Compile>
@@ -264,9 +265,13 @@
     <Content Include="Views\Flights\Booking.cshtml" />
     <Content Include="Views\Flights\BookConfirmation.cshtml" />
     <Content Include="Views\Flights\PaymentSuccess.cshtml" />
+    <Content Include="Views\Account\Profile.cshtml" />
+    <Content Include="Views\Account\EditProfile.cshtml" />
+    <Content Include="Views\Flights\EditBooking.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Uploads\Profiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

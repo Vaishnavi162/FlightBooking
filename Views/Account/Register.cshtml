@@ -5,69 +5,74 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-lg border-0 rounded-3">
-                <div class="card-header bg-primary text-white text-center">
-                    <h3>User Registration</h3>
-                </div>
-                <div class="card-body">
-                    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                    {
-                        @Html.AntiForgeryToken()
+<div class="container mt-4">
+    <h2 class="text-primary">User Registration</h2>
+    <hr />
 
-                        <div class="form-group mb-3">
-                            @Html.LabelFor(m => m.UserName)
-                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "Enter username" })
-                        </div>
+    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
 
-                        <div class="form-group mb-3">
-                            @Html.LabelFor(m => m.Email)
-                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Enter email" })
-                        </div>
-
-                        <div class="form-group mb-3">
-                            @Html.LabelFor(m => m.Password)
-                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Enter password" })
-                        </div>
-
-                        <!-- New Fields -->
-                        <div class="form-group mb-3">
-                            @Html.LabelFor(m => m.Gender)
-                            @Html.DropDownListFor(m => m.Gender,
-                                new SelectList(new[] { "Male", "Female", "Other" }),
-                                "Select Gender",
-                                new { @class = "form-control" })
-                        </div>
-
-                        <div class="form-group mb-3">
-                            @Html.LabelFor(m => m.Mobile)
-                            @Html.TextBoxFor(m => m.Mobile, new { @class = "form-control", placeholder = "Enter mobile number" })
-                        </div>
-
-                        <div class="form-group mb-3">
-                            @Html.LabelFor(m => m.State)
-                            @Html.TextBoxFor(m => m.State, new { @class = "form-control", placeholder = "Enter state" })
-                        </div>
-
-                        <div class="form-group mb-3">
-                            @Html.LabelFor(m => m.City)
-                            @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "Enter city" })
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="ProfilePicture">Profile Picture</label>
-                            <input type="file" name="ProfilePicture" class="form-control" />
-                        </div>
-
-                        <button type="submit" class="btn btn-success w-100">Register</button>
-                    }
-                </div>
-                <div class="card-footer text-center">
-                    Already have an account? <a href="@Url.Action("Login", "Account")">Login here</a>
-                </div>
-            </div>
+        <div class="form-group mb-3">
+            <label>Username</label>
+            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", required = "required" })
         </div>
-    </div>
+
+        <div class="form-group mb-3">
+            <label>Email</label>
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email", required = "required" })
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Password</label>
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control", required = "required" })
+        </div>
+
+
+
+        <div class="form-group mb-3">
+            <label>Gender</label><br />
+            @Html.RadioButtonFor(m => m.Gender, "Male") Male
+            @Html.RadioButtonFor(m => m.Gender, "Female") Female
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Mobile</label>
+            @Html.TextBoxFor(m => m.Mobile, new { @class = "form-control", required = "required" })
+        </div>
+
+        <div class="form-group mb-3">
+            <label>State</label>
+            @Html.TextBoxFor(m => m.State, new { @class = "form-control" })
+        </div>
+
+        <div class="form-group mb-3">
+            <label>City</label>
+            @Html.TextBoxFor(m => m.City, new { @class = "form-control" })
+        </div>
+
+        <!-- ✅ Profile Picture Upload -->
+        <div class="form-group mb-3">
+            <label>Profile Picture</label>
+            <input type="file" name="ProfilePicture" id="ProfilePicture" class="form-control" accept="image/*" onchange="previewImage(event)" />
+        </div>
+
+        <!-- ✅ Image Preview -->
+        <div class="mb-3">
+            <img id="preview" src="~/Content/Images/default-user.png" alt="Profile Preview" width="120" height="120" class="rounded-circle border" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Register</button>
+    }
 </div>
+
+<script>
+    // ✅ Preview uploaded image before submit
+    function previewImage(event) {
+        var output = document.getElementById('preview');
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function () {
+            URL.revokeObjectURL(output.src) // memory free
+        }
+    }
+</script>
